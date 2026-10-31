@@ -56,9 +56,21 @@ public partial class App : Application
         var main = AppInstance.FindOrRegisterForKey("main");
         if (!main.IsCurrent)
         {
+            // 协议唤起撞上常驻实例：重定向转发的激活参数读不出 URI，改用命名事件
+            // 直接送达「开始区域截图」；送达即退出，不走会弹主窗口的重定向
+            if (
+                ScreenClipProtocolService.IsScreenClipCommandLine()
+                && ScreenClipProtocolService.SignalRunningInstanceToCapture()
+            )
+            {
+                Environment.Exit(0);
+            }
             await main.RedirectActivationToAsync(instance.GetActivatedEventArgs());
             Environment.Exit(0);
         }
+
+        // 常驻实例：监听第二实例的协议唤起信号
+        ScreenClipProtocolService.StartActivationListener(_uiDispatcherQueue);
 
         // 主实例：检测自启项指向的 exe 是否存在，不存在则清除
         AppConfig.CheckAutoStartValidity();
@@ -77,9 +89,9 @@ public partial class App : Application
         }
 
         // ms-screenclip 协议冷启动：直接进区域截图，不弹主窗口（与通知点击同一条静默启动路径）
-        bool screenClipLaunch = ScreenClipProtocolService.IsScreenClipActivation(
-            instance.GetActivatedEventArgs()
-        );
+        bool screenClipLaunch =
+            ScreenClipProtocolService.IsScreenClipCommandLine()
+            || ScreenClipProtocolService.IsScreenClipActivation(instance.GetActivatedEventArgs());
         if (screenClipLaunch)
         {
             startHidden = true;

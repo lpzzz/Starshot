@@ -22,6 +22,15 @@ public static class ScreenClipProtocolService
 
     private const string CommandSubKey = @"shell\open\command";
 
+    /// <summary>跨实例通知：第二实例协议唤起时通知常驻实例开始区域截图（命名事件）</summary>
+    private const string ActivateEventName = "Starshot_ScreenClipActivate";
+
+    /// <summary>保活：局部变量会被 GC 回收并销毁命名事件句柄，监听随即失效</summary>
+    private static System.Threading.EventWaitHandle? _activateEvent;
+
+    /// <summary>保活监听注册句柄（进程常驻期间不注销）</summary>
+    private static System.Threading.RegisteredWaitHandle? _listenerRegistration;
+
     /// <summary>本应用作为默认程序注册的 Capabilities 键（RegisteredApplications 指向它）</summary>
     private const string CapabilitiesKeyPath = @"Software\Starshot\Capabilities";
 
@@ -55,28 +64,81 @@ public static class ScreenClipProtocolService
     }
 
     /// <summary>
-    /// 激活参数是否为 ms-screenclip 协议调用。未打包应用的协议激活可能以 Protocol、
-    /// CommandLineLaunch（URI 作为首个参数）或 Launch 三种形态到达，全部识别。
+    /// 激活参数是否为 ms-screenclip 协议调用。未打包应用冷启动实测 Kind=Launch 且
+    /// Data 是未投影的 WinRT.IInspectable（cast 不到 ILaunchActivatedEventArgs），
+    /// 因此以本进程命令行参数为第一信号（协议 URI 作为首个参数透传给 Main），
+    /// 激活参数按 Kind 辅助识别（重定向路径使用，与 IsHideActivation 同型）。
+    /// </summary>
+    /// <summary>
+    /// 本进程是否以 ms-screenclip 协议 URI 冷启动（URI 作为首个参数透传给 Main）。
+    /// 只在 OnLaunched 用一次：进程命令行终生不变，不能用于后续激活回调的判定。
+    /// </summary>
+    public static bool IsScreenClipCommandLine()
+    {
+        string[] cmdArgs = Environment.GetCommandLineArgs();
+        return cmdArgs.Length > 1 && FirstArgumentStartsWithScheme(cmdArgs[1]);
+    }
+
+    /// <summary>
+    /// 激活参数（含重定向转发）是否为 ms-screenclip 协议调用。未打包应用实测
+    /// Kind=Launch 且 Data 是未投影的 WinRT.IInspectable（is-cast 全部落空），
+    /// 需 AsInterface 投影后再读参数；冷启动走 IsScreenClipCommandLine。
     /// </summary>
     public static bool IsScreenClipActivation(AppActivationArguments args)
     {
-        if (args.Kind is ExtendedActivationKind.Protocol)
+        if (args.Data is IProtocolActivatedEventArgs protocol)
         {
-            return args.Data is IProtocolActivatedEventArgs protocol
-                && string.Equals(protocol.Uri.Scheme, Scheme, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(protocol.Uri.Scheme, Scheme, StringComparison.OrdinalIgnoreCase);
         }
-        if (args.Kind is ExtendedActivationKind.CommandLineLaunch)
+        if (args.Data is ICommandLineActivatedEventArgs cmd)
         {
-            if (args.Data is not ICommandLineActivatedEventArgs cmd)
-                return false;
             return FirstArgumentStartsWithScheme(cmd.Operation.Arguments);
         }
-        if (args.Kind is ExtendedActivationKind.Launch)
+        if (args.Data is ILaunchActivatedEventArgs launch)
         {
-            return args.Data is ILaunchActivatedEventArgs launch
-                && FirstArgumentStartsWithScheme(launch.Arguments);
+            return FirstArgumentStartsWithScheme(launch.Arguments);
         }
         return false;
+    }
+
+    /// <summary>
+    /// 常驻实例创建监听：收到第二实例的协议信号即在 UI 线程唤起区域截图。
+    /// 激活参数经 RedirectActivationToAsync 转发后是未投影的 IInspectable，读不出 URI，
+    /// 故用命名事件直接送达意图，不依赖激活参数。
+    /// </summary>
+    public static void StartActivationListener(Microsoft.UI.Dispatching.DispatcherQueue uiQueue)
+    {
+        _activateEvent = new System.Threading.EventWaitHandle(
+            false,
+            System.Threading.EventResetMode.AutoReset,
+            ActivateEventName
+        );
+        _listenerRegistration = System.Threading.ThreadPool.RegisterWaitForSingleObject(
+            _activateEvent,
+            (_, _) =>
+                uiQueue.TryEnqueue(Starshot.Features.Screenshot.ScreenCaptureService.CaptureRegion),
+            null,
+            -1,
+            executeOnlyOnce: false
+        );
+    }
+
+    /// <summary>
+    /// 协议唤起撞上常驻实例时发送截图信号（第二实例退出前调用）。返回是否送达；
+    /// 送达失败则回落系统重定向（可能弹主窗口，属降级路径）。
+    /// </summary>
+    public static bool SignalRunningInstanceToCapture()
+    {
+        try
+        {
+            using var evt = System.Threading.EventWaitHandle.OpenExisting(ActivateEventName);
+            evt.Set();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static bool FirstArgumentStartsWithScheme(string? arguments)
