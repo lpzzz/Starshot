@@ -329,7 +329,7 @@
     <value>システムのスクリーンショットプロトコル（ms-screenclip）を引き継ぐ</value>
   </data>
   <data name="Starshot_ScreenClipProtocolDesc" xml:space="preserve">
-    <value>オンにすると、Starshot が現在のユーザーの ms-screenclip プロトコルハンドラーとして登録され、Win+Shift+S などのシステムのスクリーンショット操作で Starshot の領域キャプチャが起動します。オフにすると登録を削除し、システムの既定に戻します。現在のユーザーのレジストリのみ書き込み、他のアプリには影響しません。</value>
+    <value>オンにすると、Starshot が ms-screenclip プロトコルの既定プログラム候補として登録され、システムの「既定のプログラム」画面が開きます。Starshot を選び、ms-screenclip にチェックを入れて一度だけ確認してください。以降、Win+Shift+S などのシステムのスクリーンショット操作で Starshot の領域キャプチャが起動します。オフにすると登録を削除し、システムの既定に戻します。現在のユーザーのレジストリのみ書き込み、他のアプリには影響しません。</value>
   </data>
   <data name="ScreenshotSetting_ScreenClipProtocolRegisterFailed" xml:space="preserve">
     <value>プロトコルの登録に失敗しました。レジストリの権限を確認してください。</value>

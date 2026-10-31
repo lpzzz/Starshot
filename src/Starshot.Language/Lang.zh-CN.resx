@@ -329,7 +329,7 @@
     <value>接管系统截图协议（ms-screenclip）</value>
   </data>
   <data name="Starshot_ScreenClipProtocolDesc" xml:space="preserve">
-    <value>开启后 Starshot 注册为当前用户的 ms-screenclip 协议处理程序：Win+Shift+S 等系统截图入口改为唤起 Starshot 区域截图；关闭即移除注册、还原系统默认。仅写入当前用户注册表，不影响其他程序。</value>
+    <value>开启后 Starshot 注册为系统截图协议（ms-screenclip）的默认程序候选，并自动打开系统「默认程序」页：请选中 Starshot 并勾选 ms-screenclip 完成一次性确认。此后 Win+Shift+S 等系统截图入口唤起 Starshot 区域截图；关闭开关即移除注册、还原系统默认。仅写入当前用户注册表，不影响其他程序。</value>
   </data>
   <data name="ScreenshotSetting_ScreenClipProtocolRegisterFailed" xml:space="preserve">
     <value>协议注册失败，请检查注册表权限</value>

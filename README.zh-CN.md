@@ -425,7 +425,7 @@ Starshot 的核心功能与交互体验已趋于完善，进入稳定打磨阶�
 <details>
 <summary><b>如何让 Win+Shift+S 使用 Starshot？</b></summary>
 
-设置 → 截图 → 打开「接管系统截图协议（ms-screenclip）」。开启后 Win+Shift+S 与其他系统截图入口（`ms-screenclip:` 协议调用）改为唤起 Starshot 区域截图，HDR/SDR 处理与热键截图完全一致；关闭开关即还原系统默认。注册仅写入当前用户（HKCU），不影响其他账户与其他程序。个别 Windows 更新可能重置该关联，重新开关一次即可。
+设置 → 截图 → 打开「接管系统截图协议（ms-screenclip）」，在自动打开的系统「默认程序」页中选中 Starshot 并勾选 ms-screenclip（一次性确认）。此后 Win+Shift+S 与其他系统截图入口（`ms-screenclip:` 协议调用）唤起 Starshot 区域截图，HDR/SDR 处理与热键截图完全一致；关闭开关即还原系统默认。注册仅写入当前用户（HKCU），不影响其他账户与其他程序。个别 Windows 更新可能重置该关联，重新开关一次即可。
 
 </details>
 

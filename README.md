@@ -423,7 +423,7 @@ Thanks to every user for the feedback and support!
 <details>
 <summary><b>How do I make Win+Shift+S use Starshot?</b></summary>
 
-Settings → Screenshot → turn on "Take over system screenshot protocol (ms-screenclip)". Win+Shift+S and other system screenshot entries (`ms-screenclip:` protocol calls) then launch Starshot region capture with the same HDR/SDR pipeline as hotkey screenshots; turn the toggle off to restore the system default. The registration is written for the current user (HKCU) only and does not affect other accounts or apps. Occasional Windows updates may reset the association — toggling it off and on again re-registers it.
+Settings → Screenshot → turn on "Take over system screenshot protocol (ms-screenclip)", then in the system "Default Programs" page that opens, select Starshot and check ms-screenclip (a one-time confirmation). Win+Shift+S and other system screenshot entries (`ms-screenclip:` protocol calls) then launch Starshot region capture with the same HDR/SDR pipeline as hotkey screenshots; turn the toggle off to restore the system default. The registration is written for the current user (HKCU) only and does not affect other accounts or apps. Occasional Windows updates may reset the association — toggling it off and on again re-registers it.
 
 </details>
 
