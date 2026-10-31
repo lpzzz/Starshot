@@ -2922,6 +2922,42 @@ namespace Starshot.Language {
         }
 
         /// <summary>
+        ///   查找类似 Take over system screenshot protocol (ms-screenclip) 的本地化字符串。
+        /// </summary>
+        public static string ScreenshotSetting_ScreenClipProtocol {
+            get {
+                return ResourceManager.GetString("ScreenshotSetting_ScreenClipProtocol", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 When on, Starshot registers as the current user's ms-screenclip protocol handler 的本地化字符串。
+        /// </summary>
+        public static string Starshot_ScreenClipProtocolDesc {
+            get {
+                return ResourceManager.GetString("Starshot_ScreenClipProtocolDesc", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Failed to register the protocol. Check registry permissions. 的本地化字符串。
+        /// </summary>
+        public static string ScreenshotSetting_ScreenClipProtocolRegisterFailed {
+            get {
+                return ResourceManager.GetString("ScreenshotSetting_ScreenClipProtocolRegisterFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Failed to remove the protocol registration. Delete HKCU\Software\Classes\ms-screenclip manually. 的本地化字符串。
+        /// </summary>
+        public static string ScreenshotSetting_ScreenClipProtocolUnregisterFailed {
+            get {
+                return ResourceManager.GetString("ScreenshotSetting_ScreenClipProtocolUnregisterFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   查找类似 Info window duration 的本地化字符串。
         /// </summary>
         public static string AppearanceSetting_InfoWindowDuration {

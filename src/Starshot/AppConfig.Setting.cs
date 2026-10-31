@@ -613,6 +613,16 @@ public static partial class AppConfig
     }
 
     /// <summary>
+    /// 接管系统截图协议 ms-screenclip（issue #17，当前用户级 opt-in）：
+    /// 开=注册为协议处理程序，Win+Shift+S 等系统截图入口唤起区域截图；关=移除注册，还原系统默认。
+    /// </summary>
+    public static bool ScreenClipProtocol
+    {
+        get => GetValue(false);
+        set => SetValue(value);
+    }
+
+    /// <summary>
     /// 全屏时静默截图通知：开=截图弹浮窗前检测独占全屏（SHQueryUserNotificationState），
     /// 全屏中不弹（浮窗会把游戏最小化到桌面），平时照常弹。
     /// 关（默认）=始终弹浮窗且不做检测，行为与引入本开关前完全一致。

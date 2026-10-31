@@ -285,6 +285,7 @@ Displays the logo + tagline on startup. Delays 700ms then fades out over 400ms. 
 - App notifications require registering the app identity in the registry. The uninstaller is maintained externally, so these entries are not removed on uninstall. Leftovers:
   - `HKCU\Software\Classes\AppUserModelId\Starshot` (containing `DisplayName`, `IconUri`, `CustomActivator`), plus the small icon cache `%LOCALAPPDATA%\Microsoft\WindowsAppSDK\Starshot.png`
   - `HKCU\Software\Classes\CLSID\{value of CustomActivator}\LocalServer32`
+- The current-user protocol registration `HKCU\Software\Classes\ms-screenclip` written by "Take over system screenshot protocol (ms-screenclip)" is likewise not removed on uninstall; turn the toggle off to remove it, or run `reg delete HKCU\Software\Classes\ms-screenclip /f` manually.
 
 ## Architecture
 
@@ -418,6 +419,13 @@ Contributions welcome:
 Thanks to every user for the feedback and support!
 
 ## FAQ
+
+<details>
+<summary><b>How do I make Win+Shift+S use Starshot?</b></summary>
+
+Settings → Screenshot → turn on "Take over system screenshot protocol (ms-screenclip)". Win+Shift+S and other system screenshot entries (`ms-screenclip:` protocol calls) then launch Starshot region capture with the same HDR/SDR pipeline as hotkey screenshots; turn the toggle off to restore the system default. The registration is written for the current user (HKCU) only and does not affect other accounts or apps. Occasional Windows updates may reset the association — toggling it off and on again re-registers it.
+
+</details>
 
 <details>
 <summary><b>Region capture coordinate box shows negative values (e.g. -11,-11) when hovering certain windows</b></summary>

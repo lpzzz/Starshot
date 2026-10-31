@@ -194,6 +194,21 @@
         </StackPanel>
       </StackPanel>
 
+      <!--  系统截图入口接管  -->
+      <StackPanel Spacing="6">
+        <ToggleSwitch
+          IsOn="{x:Bind ScreenClipProtocol, Mode=TwoWay}"
+          OffContent="{x:Bind lang:Lang.ScreenshotSetting_ScreenClipProtocol}"
+          OnContent="{x:Bind lang:Lang.ScreenshotSetting_ScreenClipProtocol}"
+        />
+        <TextBlock
+          FontSize="12"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          Text="{x:Bind lang:Lang.Starshot_ScreenClipProtocolDesc}"
+          TextWrapping="Wrap"
+        />
+      </StackPanel>
+
       <!--  OCR 文字识别  -->
       <StackPanel Spacing="12">
         <TextBlock FontSize="20" Text="{x:Bind lang:Lang.ScreenshotSetting_OcrEngine}" />

@@ -185,6 +185,38 @@ public sealed partial class ScreenshotSetting : PageBase
         }
     } = AppConfig.AutoCopyScreenshotToClipboard;
 
+    /// <summary>
+    /// 接管系统截图协议 ms-screenclip：开=当前用户级注册，Win+Shift+S 等系统截图入口唤起区域截图；
+    /// 关=移除注册还原系统默认。注册表写入/删除失败时回弹开关，保持配置与系统状态一致。
+    /// </summary>
+    public bool ScreenClipProtocol
+    {
+        get;
+        set
+        {
+            if (!SetProperty(ref field, value))
+            {
+                return;
+            }
+            if (ScreenClipProtocolService.Apply(value))
+            {
+                AppConfig.ScreenClipProtocol = value;
+            }
+            else
+            {
+                field = !value; // 回滚字段再通知，让绑定弹回原状态
+                OnPropertyChanged(nameof(ScreenClipProtocol));
+                InAppToast.MainWindow?.Error(
+                    (string?)null,
+                    value
+                        ? Lang.ScreenshotSetting_ScreenClipProtocolRegisterFailed
+                        : Lang.ScreenshotSetting_ScreenClipProtocolUnregisterFailed,
+                    7000
+                );
+            }
+        }
+    } = AppConfig.ScreenClipProtocol && ScreenClipProtocolService.IsRegistered();
+
     public int CaptureMonitorSource
     {
         get;

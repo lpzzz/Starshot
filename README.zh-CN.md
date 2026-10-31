@@ -287,6 +287,7 @@ HDR 截图可同时保存一份 Ultra HDR JPEG（SDR 基图 + HDR gain map），
 - 应用通知需要向注册表注册应用身份，由于卸载器是外部维护，卸载时不会自动清理。残留项：
   - `HKCU\Software\Classes\AppUserModelId\Starshot`（含 `DisplayName`、`IconUri`、`CustomActivator`），以及小图标缓存 `%LOCALAPPDATA%\Microsoft\WindowsAppSDK\Starshot.png`
   - `HKCU\Software\Classes\CLSID\{CustomActivator 的值}\LocalServer32`
+- 「接管系统截图协议（ms-screenclip）」开启后写入的当前用户协议注册 `HKCU\Software\Classes\ms-screenclip`，卸载时同样不会自动清理；关闭设置里的开关即可移除，或手动执行 `reg delete HKCU\Software\Classes\ms-screenclip /f`
 
 ## 架构
 
@@ -420,6 +421,13 @@ Starshot 的核心功能与交互体验已趋于完善，进入稳定打磨阶�
 感谢每一位用户的反馈与支持！
 
 ## 常见问题
+
+<details>
+<summary><b>如何让 Win+Shift+S 使用 Starshot？</b></summary>
+
+设置 → 截图 → 打开「接管系统截图协议（ms-screenclip）」。开启后 Win+Shift+S 与其他系统截图入口（`ms-screenclip:` 协议调用）改为唤起 Starshot 区域截图，HDR/SDR 处理与热键截图完全一致；关闭开关即还原系统默认。注册仅写入当前用户（HKCU），不影响其他账户与其他程序。个别 Windows 更新可能重置该关联，重新开关一次即可。
+
+</details>
 
 <details>
 <summary><b>区域截图悬停某些窗口时坐标框显示负值（如 -11,-11）？</b></summary>

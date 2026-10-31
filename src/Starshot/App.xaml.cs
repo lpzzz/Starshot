@@ -9,6 +9,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Starshot.Features.Notifications;
+using Starshot.Features.Screenshot;
+using Starshot.Features.Setting;
 using Starshot.Features.Telemetry;
 using Starshot.Features.Update;
 using Starshot.Features.ViewHost;
@@ -74,12 +76,26 @@ public partial class App : Application
             startHidden = true;
         }
 
+        // ms-screenclip 协议冷启动：直接进区域截图，不弹主窗口（与通知点击同一条静默启动路径）
+        bool screenClipLaunch = ScreenClipProtocolService.IsScreenClipActivation(
+            instance.GetActivatedEventArgs()
+        );
+        if (screenClipLaunch)
+        {
+            startHidden = true;
+        }
+
         if (!startHidden)
         {
             m_MainWindow = new MainWindow();
             m_MainWindow.Activate();
         }
         EnsureSystemTray();
+        if (screenClipLaunch)
+        {
+            // 托盘常驻宿主就绪后立即唤起区域截图（与热键同一条 UI 线程队列）
+            _uiDispatcherQueue.TryEnqueue(ScreenCaptureService.CaptureRegion);
+        }
         // 匿名心跳与托盘/全局热键同一条常驻生命周期：--hide 自启、从不打开主窗口的用户同样被统计
         TelemetryService.Start(_uiDispatcherQueue);
         // 更新检查同理：不依附主窗口，进程内每 5 小时查一次，呈现等主窗口可见或应用通知
@@ -121,6 +137,12 @@ public partial class App : Application
     {
         _uiDispatcherQueue.TryEnqueue(() =>
         {
+            // ms-screenclip 协议重定向激活：唤起区域截图，不弹主窗口
+            if (ScreenClipProtocolService.IsScreenClipActivation(e))
+            {
+                ScreenCaptureService.CaptureRegion();
+                return;
+            }
             // --hide 的重定向激活（自启项与已运行实例撞车等）：保持现状，不拉起主窗口
             if (!IsHideActivation(e))
             {
@@ -136,8 +158,7 @@ public partial class App : Application
     {
         return e.Kind is ExtendedActivationKind.CommandLineLaunch
             && e.Data is ICommandLineActivatedEventArgs { Operation.Arguments: string args }
-            && args
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            && args.Split(' ', StringSplitOptions.RemoveEmptyEntries)
                 .Contains("--hide", StringComparer.OrdinalIgnoreCase);
     }
 
