@@ -187,7 +187,10 @@ public static class ScreenClipProtocolService
                 registered.SetValue("Starshot", CapabilitiesKeyPath);
             }
 
-            // 3) 引导用户到系统「默认程序」页，一次性选中 Starshot → 勾选 ms-screenclip
+            // 3) 通知 shell 关联已变更（不广播则关联解析仍走缓存，协议调用不生效——Win11 实测）
+            NativeMethods.SHChangeNotify(NativeMethods.SHCNE_ASSOCCHANGED, 0, 0, 0);
+
+            // 4) 引导用户到系统「默认程序」页，一次性选中 Starshot → 勾选 ms-screenclip
             OpenDefaultProgramsPage();
             return true;
         }
@@ -231,12 +234,26 @@ public static class ScreenClipProtocolService
                 UrlAssociationKeyPath,
                 throwOnMissingSubKey: false
             );
+            NativeMethods.SHChangeNotify(NativeMethods.SHCNE_ASSOCCHANGED, 0, 0, 0);
             return true;
         }
         catch
         {
             return false;
         }
+    }
+
+    internal static class NativeMethods
+    {
+        internal const int SHCNE_ASSOCCHANGED = 0x08000000;
+
+        [System.Runtime.InteropServices.DllImport("shell32.dll")]
+        internal static extern void SHChangeNotify(
+            int wEventId,
+            uint uFlags,
+            IntPtr dwItem1,
+            IntPtr dwItem2
+        );
     }
 
     /// <summary>打开系统「默认程序」页（经典 CPL 逐项列表，桌面程序按字母可见）。</summary>
