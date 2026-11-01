@@ -325,6 +325,18 @@
   <data name="ScreenshotSetting_OcrEngineDesc" xml:space="preserve">
     <value>Recognize text in images from the viewer</value>
   </data>
+  <data name="ScreenshotSetting_ScreenClipProtocol" xml:space="preserve">
+    <value>Take over system screenshot protocol (ms-screenclip)</value>
+  </data>
+  <data name="Starshot_ScreenClipProtocolDesc" xml:space="preserve">
+    <value>When on, Starshot registers as a candidate default handler for the ms-screenclip protocol and opens the system "Default Programs" page: pick Starshot and check ms-screenclip for a one-time confirmation. After that, Win+Shift+S and other system screenshot entries launch Starshot region capture; turn off to remove the registration and restore the system default. Only the current user's registry is written; other apps are not affected.</value>
+  </data>
+  <data name="ScreenshotSetting_ScreenClipProtocolRegisterFailed" xml:space="preserve">
+    <value>Failed to register the protocol. Check registry permissions.</value>
+  </data>
+  <data name="ScreenshotSetting_ScreenClipProtocolUnregisterFailed" xml:space="preserve">
+    <value>Failed to remove the protocol registration. Delete HKCU\Software\Classes\ms-screenclip manually.</value>
+  </data>
   <data name="ImageViewWindow_Previous" xml:space="preserve">
     <value>Previous</value>
     <comment>Previous Image</comment>

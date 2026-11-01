@@ -325,6 +325,18 @@
   <data name="ScreenshotSetting_OcrEngineDesc" xml:space="preserve">
     <value>查看器内识别图片文字</value>
   </data>
+  <data name="ScreenshotSetting_ScreenClipProtocol" xml:space="preserve">
+    <value>接管系统截图协议（ms-screenclip）</value>
+  </data>
+  <data name="Starshot_ScreenClipProtocolDesc" xml:space="preserve">
+    <value>开启后 Starshot 注册为系统截图协议（ms-screenclip）的默认程序候选，并自动打开系统「默认程序」页：请选中 Starshot 并勾选 ms-screenclip 完成一次性确认。此后 Win+Shift+S 等系统截图入口唤起 Starshot 区域截图；关闭开关即移除注册、还原系统默认。仅写入当前用户注册表，不影响其他程序。</value>
+  </data>
+  <data name="ScreenshotSetting_ScreenClipProtocolRegisterFailed" xml:space="preserve">
+    <value>协议注册失败，请检查注册表权限</value>
+  </data>
+  <data name="ScreenshotSetting_ScreenClipProtocolUnregisterFailed" xml:space="preserve">
+    <value>协议还原失败，请手动删除 HKCU\Software\Classes\ms-screenclip</value>
+  </data>
   <data name="ImageViewWindow_Previous" xml:space="preserve">
     <value>上一个</value>
     <comment>Previous Image</comment>

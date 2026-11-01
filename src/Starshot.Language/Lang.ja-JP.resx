@@ -325,6 +325,18 @@
   <data name="ScreenshotSetting_OcrEngineDesc" xml:space="preserve">
     <value>ビューアーで画像内のテキストを認識します</value>
   </data>
+  <data name="ScreenshotSetting_ScreenClipProtocol" xml:space="preserve">
+    <value>システムのスクリーンショットプロトコル（ms-screenclip）を引き継ぐ</value>
+  </data>
+  <data name="Starshot_ScreenClipProtocolDesc" xml:space="preserve">
+    <value>オンにすると、Starshot が ms-screenclip プロトコルの既定プログラム候補として登録され、システムの「既定のプログラム」画面が開きます。Starshot を選び、ms-screenclip にチェックを入れて一度だけ確認してください。以降、Win+Shift+S などのシステムのスクリーンショット操作で Starshot の領域キャプチャが起動します。オフにすると登録を削除し、システムの既定に戻します。現在のユーザーのレジストリのみ書き込み、他のアプリには影響しません。</value>
+  </data>
+  <data name="ScreenshotSetting_ScreenClipProtocolRegisterFailed" xml:space="preserve">
+    <value>プロトコルの登録に失敗しました。レジストリの権限を確認してください。</value>
+  </data>
+  <data name="ScreenshotSetting_ScreenClipProtocolUnregisterFailed" xml:space="preserve">
+    <value>プロトコル登録の削除に失敗しました。HKCU\Software\Classes\ms-screenclip を手動で削除してください。</value>
+  </data>
   <data name="ImageViewWindow_Previous" xml:space="preserve">
     <value>前へ</value>
     <comment>Previous Image</comment>
